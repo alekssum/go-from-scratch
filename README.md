@@ -1,1 +1,1 @@
-# Go from scratch
+# Go playground
