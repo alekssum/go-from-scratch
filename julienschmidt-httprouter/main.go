@@ -12,6 +12,7 @@ func main() {
 	r := httprouter.New()
 	r.GET("/", HomeHandler)
 	r.POST("/posts", PostsCreateHandler)
+	r.GET("/hello/:name", Hello)
 
 	fmt.Println("Starting server on :8080")
 	http.ListenAndServe(":8080", r)
@@ -23,11 +24,12 @@ func HomeHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 }
 
+func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
+	r.ParseForm()
+	fmt.Fprintln(w, r.FormValue("param"))
+}
+
 func PostsCreateHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	fmt.Fprintln(rw, "posts create")
-
-	fmt.Println("getParam:", p.ByName("getParam"))
-	fmt.Println("postParam:", p.ByName("postParam"))
-	fmt.Println("formValueGetParam:", r.PostFormValue("getParam"))
-	fmt.Println("formValuePostParam:", r.PostFormValue("postParam"))
 }
