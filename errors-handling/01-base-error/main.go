@@ -17,10 +17,12 @@ func main() {
 
 func getRemotePage() error {
 
-	_, err := http.Get("http://notexistingsite.org")
+	url := "http://notexistingsite.org"
+
+	_, err := http.Get(url)
 
 	if err != nil {
-		return fmt.Errorf("getRemotePage: %s", err)
+		return fmt.Errorf("getRemotePage\nerr:%s\nurl:%s", err, url)
 	}
 
 	return nil
