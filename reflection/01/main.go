@@ -12,11 +12,6 @@ type order struct {
 	goods []string
 }
 
-type user struct {
-	id                         uint8
-	name, middleName, lastName string
-}
-
 func main() {
 
 	o := &order{
