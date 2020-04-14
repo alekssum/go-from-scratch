@@ -1,11 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
 
 type SqlBuilder struct {
-	fields []string
-	values []interface{}
-	table  string
+	fields, values []string
+	table          string
 }
 
 func (b *SqlBuilder) Fields(fields ...string) *SqlBuilder {
@@ -15,7 +18,7 @@ func (b *SqlBuilder) Fields(fields ...string) *SqlBuilder {
 	return b
 }
 
-func (b *SqlBuilder) Values(values ...interface{}) *SqlBuilder {
+func (b *SqlBuilder) Values(values ...string) *SqlBuilder {
 	for _, v := range values {
 		b.values = append(b.values, v)
 	}
@@ -27,7 +30,17 @@ func (b *SqlBuilder) Into(table string) *SqlBuilder {
 	return b
 }
 
-func (b *SqlBuilder) Build() string {
-	fmt.Println(b)
-	return ""
+func (b *SqlBuilder) Build() (string, error) {
+
+	if b.table == "" {
+		return "", errors.New("table is not specified")
+	}
+
+	return fmt.Sprintf(
+		"INSERT INTO %s (%s) VALUES(%s)",
+		b.table,
+		strings.Join(b.fields, ","),
+		strings.Join(b.values, ","),
+	), nil
+
 }

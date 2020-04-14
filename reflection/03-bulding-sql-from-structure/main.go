@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 )
 
 type user struct {
-	id                       int
 	name, email, phoneNumber string
 }
 
@@ -18,7 +18,7 @@ type order struct {
 
 func main() {
 
-	u := user{1, "Ivan", "ivan@example.com", "+790005552211"}
+	u := user{"Ivan", "ivan@example.com", "+790005552211"}
 	fmt.Println(buildQuery(u))
 
 }
@@ -34,19 +34,25 @@ func buildQuery(s interface{}) string {
 	obj := reflect.ValueOf(s)
 	for i := 0; i < obj.NumField(); i++ {
 		switch obj.Field(i).Kind() {
-		case reflect.Int:
-			builder.Fields(typeOf.Field(i).Name).
-				Values(obj.Field(i).Int())
-		// case reflect.Float64
-		// case reflect.String:
+		// case reflect.Int:
+		// 	builder.Fields(typeOf.Field(i).Name).Values(obj.Field(i).Int())
+		// case reflect.Float64:
+		// 	builder.Fields(typeOf.Field(i).Name).Values(obj.Field(i).Float())
+		case reflect.String:
+			builder.Fields(typeOf.Field(i).Name).Values(obj.Field(i).String())
 		// case reflect.Slice:
 		default:
 			fmt.Printf("Unknown type %v of value %v\n", obj.Field(i).Kind(), obj.Field(i))
 		}
 	}
 
-	builder.Build()
+	builder.Into("users")
+	q, err := builder.Build()
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
 
-	return ""
+	return q
 
 }
