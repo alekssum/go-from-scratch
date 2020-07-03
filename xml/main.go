@@ -7,23 +7,26 @@ import (
 
 func main() {
 
-	res := YMLcatalogTree{}
+	res := YMLCatalogTree{}
 	xml.Unmarshal([]byte(xmlString), &res)
 
 	fmt.Println(res)
 
 }
 
-type YMLcatalogTree struct {
+// YMLCatalogTree is ...
+type YMLCatalogTree struct {
 	Shop shop `xml:"shop"`
 }
 
 type shop struct {
-	Name    string `xml:"name"`
-	Company string `xml:"company"`
-	URL     string `xml:"url"`
-	City    string `xml:"city"`
-	Sklads  sklads `xml:"sklads"`
+	Name       string     `xml:"name"`
+	Company    string     `xml:"company"`
+	URL        string     `xml:"url"`
+	City       string     `xml:"city"`
+	Sklads     sklads     `xml:"sklads"`
+	Categories categories `xml:"categories"`
+	Offers     offers     `xml:"offers"`
 }
 
 type sklads struct {
@@ -31,8 +34,58 @@ type sklads struct {
 }
 
 type store struct {
-	ID    string `xml:"id,attr"`
-	Phone string `xml:"phone,attr"`
+	ID       string   `xml:"id,attr"`
+	Phone    string   `xml:"phone,attr"`
+	Lat      string   `xml:"lat,attr"`
+	Lon      string   `xml:"lon,attr"`
+	Schedule string   `xml:"schedule,attr"`
+	Address  string   `xml:"address,attr"`
+	Workweek workweek `xml:"work-week"`
+}
+
+type workweek struct {
+	Workday []workday `xml:"work-day"`
+}
+
+type workday struct {
+	Weekday string `xml:"week-day,attr"`
+	Start   string `xml:"start,attr"`
+	End     string `xml:"end,attr"`
+}
+
+type categories struct {
+	Category []category `xml:"category"`
+}
+
+type category struct {
+	ID   string `xml:"id,attr"`
+	Name string `xml:",chardata"`
+}
+
+type offers struct {
+	Offer []offer `xml:"offer"`
+}
+
+type offer struct {
+	ID         string  `xml:"id,attr"`
+	Available  bool    `xml:"available,attr"`
+	GroupID    string  `xml:"group_id,attr"`
+	Price      float64 `xml:"price"`
+	CurrencyID string  `xml:"currencyId"`
+	CategoryID string  `xml:"categoryId"`
+	Store      struct {
+		ID     string  `xml:"id,attr"`
+		Amount float64 `xml:"amount,attr"`
+	} `xml:"store"`
+	Picture     string `xml:"picture"`
+	Vendor      string `xml:"vendor"`
+	VendorCode  string `xml:"vendorCode"`
+	Name        string `xml:"name"`
+	Description string `xml:"description"`
+	Params      []struct {
+		Name  string `xml:"name,attr"`
+		Value string `xml:",chardata"`
+	} `xml:"param"`
 }
 
 var xmlString string = `<?xml version="1.0" encoding="UTF-8"?>
@@ -99,7 +152,7 @@ var xmlString string = `<?xml version="1.0" encoding="UTF-8"?>
 				Цепи
 			</category>
 		</categories>
-		</offers>
+		<offers>
 			<offer id="UT008200055750639271" available="true" group_id="00012562-6_УТ0001372">
 				<price>
 					3950
