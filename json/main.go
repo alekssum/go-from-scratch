@@ -5,10 +5,16 @@ import (
 	"log"
 )
 
-var s string = `{"keys":[
-		{"text":"Add word", "data":"{some new data}"},
-		{"text":"Edit word", "data":"{some edit data}"}
-	]}`
+var s string = `[
+		{"keys":[
+			{"text":"Add word", "data":"{some new data}"},
+			{"text":"Edit word", "data":"{some edit data}"}
+		]},
+		{"keys":[
+			{"text":"Add word", "data":"{some new data}"},
+			{"text":"Edit word", "data":"{some edit data}"}
+		]}
+	]`
 
 type tree struct {
 	Keys []struct {
@@ -19,9 +25,9 @@ type tree struct {
 
 func main() {
 
-	t := &tree{}
+	t := make([]tree, 0)
 
-	err := json.Unmarshal([]byte(s), t)
+	err := json.Unmarshal([]byte(s), &t)
 	if err != nil {
 		log.Fatal(err)
 	}
